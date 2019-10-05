@@ -72,11 +72,14 @@ namespace UssdcodeRead
         }
         protected override void OnServiceConnected()
         {
-            var accessibilityServiceInfo = new AccessibilityServiceInfo();
-            accessibilityServiceInfo.Flags = AccessibilityServiceFlags.RequestFilterKeyEvents;//enum 1 
+            var accessibilityServiceInfo = ServiceInfo;
             accessibilityServiceInfo.EventTypes = EventTypes.AllMask;
+            accessibilityServiceInfo.Flags |= AccessibilityServiceFlags.IncludeNotImportantViews;
+            accessibilityServiceInfo.Flags |= AccessibilityServiceFlags.RequestFilterKeyEvents;
+            accessibilityServiceInfo.Flags |= AccessibilityServiceFlags.ReportViewIds;
+            accessibilityServiceInfo.Flags |= AccessibilityServiceFlags.RequestTouchExplorationMode;
             accessibilityServiceInfo.FeedbackType = Android.AccessibilityServices.FeedbackFlags.AllMask;
-            accessibilityServiceInfo.NotificationTimeout = 50;
+            accessibilityServiceInfo.NotificationTimeout = 100;
 
             SetServiceInfo(accessibilityServiceInfo);
             base.OnServiceConnected();
