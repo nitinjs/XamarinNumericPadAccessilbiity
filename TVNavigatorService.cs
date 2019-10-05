@@ -25,7 +25,37 @@ namespace UssdcodeRead
         private AccessibilityManager mAccessibilityManager;
         private Context mContext;
         private static TVNavigatorService mInstance;
+        public List<Keycode> PressedKeys = new List<Keycode>();
+        public DateTime LastKeyAddedTime = DateTime.Now;
+        Dictionary<Keycode, int> keyCodeNumberMappings = new Dictionary<Keycode, int>();
+        List<Keycode> allowedNumbers = new List<Keycode>();
+        public TVNavigatorService()
+        {
+            keyCodeNumberMappings = new Dictionary<Keycode, int>();
+            keyCodeNumberMappings.Add(Keycode.Num0, 0);
+            keyCodeNumberMappings.Add(Keycode.Num1, 1);
+            keyCodeNumberMappings.Add(Keycode.Num2, 2);
+            keyCodeNumberMappings.Add(Keycode.Num3, 3);
+            keyCodeNumberMappings.Add(Keycode.Num4, 4);
+            keyCodeNumberMappings.Add(Keycode.Num5, 5);
+            keyCodeNumberMappings.Add(Keycode.Num6, 6);
+            keyCodeNumberMappings.Add(Keycode.Num7, 7);
+            keyCodeNumberMappings.Add(Keycode.Num8, 8);
+            keyCodeNumberMappings.Add(Keycode.Num9, 9);
 
+            allowedNumbers = new List<Keycode> {
+                Keycode.Num0,
+                Keycode.Num1,
+                Keycode.Num2,
+                Keycode.Num3,
+                Keycode.Num4,
+                Keycode.Num5,
+                Keycode.Num6,
+                Keycode.Num7,
+                Keycode.Num8,
+                Keycode.Num9
+            };
+        }
         public void init(Context context)
         {
             mContext = Android.App.Application.Context;
@@ -49,6 +79,35 @@ namespace UssdcodeRead
 
             SetServiceInfo(accessibilityServiceInfo);
             base.OnServiceConnected();
+        }
+
+        protected override bool OnKeyEvent(KeyEvent e)
+        {
+
+            var action = e.Action;
+            var keyCode = e.KeyCode;
+            if (action == KeyEventActions.Down && allowedNumbers.Contains(keyCode))
+            {
+                //wait for another key pressed
+                if (DateTime.Now - LastKeyAddedTime > new TimeSpan(0, 0, 0, 3))
+                {
+                    PressedKeys.Clear();
+                }
+                PressedKeys.Add(keyCode);
+
+                var keyNumbers = from p in PressedKeys
+                                 join q in keyCodeNumberMappings on p equals q.Key
+                                 select q.Value;
+
+                //hit back button and go to item at entered index
+                var channelIndex = String.Join("", keyNumbers);
+
+                return true;
+            }
+            else
+            {
+                return base.OnKeyEvent(e);
+            }
         }
 
         public override void OnAccessibilityEvent(AccessibilityEvent e)
@@ -230,21 +289,6 @@ namespace UssdcodeRead
             var item = findListItemByIndex(index);
             performViewClick(item);
         }
-
-        //public boolean onKeyEvent(KeyEvent event) {
-        //        int action = event.getAction();
-        //    int keyCode = event.getKeyCode();
-        //    if (action == KeyEvent.ACTION_UP) {
-        //        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-        //            Log.d("Hello", "KeyUp");
-        //        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-        //            Log.d("Hello", "KeyDown");
-        //        }
-        //        return true;
-        //    } else {
-        //        return super.onKeyEvent(event);
-        //    }
-        //} 
 
         public override void OnInterrupt()
         {

@@ -2,7 +2,7 @@
 <accessibility-service
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/accessibility_service_description"
-    android:packageNames="myApp"
+    android:packageNames=""
     android:accessibilityEventTypes="typeAllMask"
     android:accessibilityFlags="flagRequestFilterKeyEvents"
     android:accessibilityFeedbackType="feedbackAllMask"
