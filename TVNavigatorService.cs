@@ -76,6 +76,7 @@ namespace UssdcodeRead
             accessibilityServiceInfo.Flags = AccessibilityServiceFlags.RequestFilterKeyEvents;//enum 1 
             accessibilityServiceInfo.EventTypes = EventTypes.AllMask;
             accessibilityServiceInfo.FeedbackType = Android.AccessibilityServices.FeedbackFlags.AllMask;
+            accessibilityServiceInfo.NotificationTimeout = 50;
 
             SetServiceInfo(accessibilityServiceInfo);
             base.OnServiceConnected();

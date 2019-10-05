@@ -8,7 +8,6 @@
     android:accessibilityFeedbackType="feedbackAllMask"
     android:notificationTimeout="100"
     android:canRetrieveWindowContent="true"
-    android:canRequestFilterKeyEvents="true"
-       
+    android:canRequestFilterKeyEvents="true"       
    />
 
