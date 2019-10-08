@@ -28,13 +28,6 @@ namespace UssdcodeRead
 
             var intentToAccessibility = new Intent(this, typeof(TVNavigatorService));
             StartService(intentToAccessibility);
-
-            Button button = FindViewById<Button>(Resource.Id.myButton);
-
-            button.Click += delegate
-            {
-                button.Text = string.Format("{0} TV Accessibility", count++);
-            };
         }
     }
 }
